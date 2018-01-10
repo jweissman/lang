@@ -1,6 +1,6 @@
 name: lang
-summary: "TODO: Summary"
-description: "TODO: Description"
+summary: "grammar services for ruby"
+description: "describe pegs with ruby"
 license: MIT
 authors: Joseph Weissman
 email: jweissman1986@gmail.com
