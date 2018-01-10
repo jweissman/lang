@@ -25,13 +25,23 @@ class Numbers < Lang::Grammar
   end
 
   production :factor do |match|
-    match.one :value
+    match.one :power
     match.zero_or_more :factor_prime
   end
 
   production :factor_prime do |match|
     match.one_of :mult, :div
     match.one :factor
+  end
+
+  production :power do |match|
+    match.one :value
+    match.zero_or_more :power_prime
+  end
+
+  production :power_prime do |match|
+    match.one :exp
+    match.one :power
   end
 
   production :value do |match|
@@ -64,8 +74,12 @@ class Numbers < Lang::Grammar
     match.token :operator, '/'
   end
 
+  production :exp do |match|
+    match.token :operator, '**'
+  end
+
   token :integer_literal, matches: /[0-9]+/
-  token :operator, matches: /[-+\*\/]/
+  token :operator, matches: /\*\*|[-+\*\/]/
   token :parens, matches: /[\(\)]/
 end
 
@@ -74,16 +88,15 @@ class Calculator < Lang::Composer
 
   class << self
     def term(left, op_and_right=nil)
-      val = left
       if op_and_right
         op, right = *op_and_right
         case op.first
-        when :add then val + right
-        when :subtract then val - right
+        when :add then left + right
+        when :subtract then left - right
         else raise "Unknown operator #{operator}"
         end
       else
-        val
+        left
       end
     end
 
@@ -92,29 +105,42 @@ class Calculator < Lang::Composer
     end
 
     def factor(left, op_and_right=nil)
-      val = left
       if op_and_right
         op, right = *op_and_right
         case op.first
-        when :div then val / right
-        when :mult then val * right
+        when :div then left / right
+        when :mult then left * right
         else raise "Unknown operator #{operator}"
         end
       else
-        val
+        left
       end
-    end
-
-    def subexpression(*args)
-      args[1] # ...could destructure in sign like (_lp,expr,_rp)
     end
 
     def factor_prime(*args)
       args
     end
 
+    def power(left, op_and_right=nil)
+      if op_and_right
+        _op,right = *op_and_right
+        # assume op is exponentiate...
+        left ** right
+      else
+        left
+      end
+    end
+
+    def power_prime(*args)
+      args
+    end
+
     def number(val)
       val
+    end
+
+    def subexpression(*args)
+      args[1] # ...could destructure in sign like (_lp,expr,_rp)
     end
 
     def mult(_sign)
@@ -131,6 +157,10 @@ class Calculator < Lang::Composer
 
     def sub(_sign)
       [ :subtract ]
+    end
+
+    def exp(_sign)
+      [ :exponentiate ]
     end
 
     def parens(_paren)

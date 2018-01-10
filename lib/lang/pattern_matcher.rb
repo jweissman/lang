@@ -3,7 +3,7 @@ module Lang
     attr_reader :matches, :consumed_tokens_count
     def initialize(grammar:, tokens:)
       @grammar = grammar
-      @tokens = tokens.dup #.map(&:dup)
+      @tokens = tokens.dup
       @matches = []
       @errors = []
 
@@ -12,7 +12,6 @@ module Lang
 
     def token(tkn, val=nil)
       return if failed?
-      # p [ :token, tkn ]
       if check tkn
         if !val.nil? && !(check(tkn) == val)
           error "Expected #{tkn} to be #{val} but was #{check tkn}"
@@ -27,7 +26,6 @@ module Lang
 
     def one(type)
       return if failed?
-      # p [ :one, type: type ]
       type_def = @grammar.productions[type]
       sub_analyst = build_sub_analyst
       type_def.call(sub_analyst)
@@ -109,12 +107,6 @@ module Lang
       # p [ :match!, m ]
       @matches << m
     end
-
-    # def follow_subanalysis(type:, subanalyst:)
-    #   @consumed_tokens_count += sub_analyst.consumed_tokens_count
-    #   @tokens.shift(sub_analyst.consumed_tokens_count)
-    #   match [ type, *sub_analyst.matches ]
-    # end
 
     def error(e)
       @errors << e

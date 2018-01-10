@@ -29,20 +29,20 @@ describe Lang::Grammar do
     describe 'production' do
       it 'can match tokens' do
         expect(Numbers.parse(input_string: '1234')).to eq([
-          :term, [ :factor, [ :value, [ :number, [ :integer_literal, '1234' ]]]]
+          :term, [ :factor, [ :power, [ :value, [ :number, [ :integer_literal, '1234' ]]]]]
         ])
       end
 
       it 'can match patterns' do
         expect(Numbers.parse(input_string: '1+2-3')).to eq(
-          [:term, [:factor, [:value, [ :number, [:integer_literal, "1"]]]],
+          [:term, [:factor, [ :power, [:value, [ :number, [:integer_literal, "1"]]]]],
            [:term_prime,
             [:add, [:operator, "+"]],
             [:term,
-             [:factor, [:value, [ :number, [:integer_literal, "2"]]]],
+             [:factor, [ :power, [:value, [ :number, [:integer_literal, "2"]]]]],
              [:term_prime,
               [:sub, [:operator, "-"]],
-              [:term, [:factor, [:value, [ :number, [:integer_literal, "3"]]]]]]]]]
+              [:term, [:factor, [ :power, [:value, [ :number, [:integer_literal, "3"]]]]]]]]]]
         )
       end
     end
@@ -51,17 +51,17 @@ describe Lang::Grammar do
   context 'arithmetic' do
     it 'should match integers' do
       expect(Numbers.parse(input_string: '12345')).to eq(
-        [ :term, [ :factor, [ :value, [ :number, [:integer_literal, '12345']]]]]
+        [ :term, [ :factor, [ :power, [ :value, [ :number, [:integer_literal, '12345']]]]]]
       )
     end
 
     it 'should match integer plus integer' do
       expect(Numbers.parse(input_string: '1+2')).to eq(
         [ :term,
-           [ :factor, [ :value, [ :number, [ :integer_literal, "1" ]]]],
+           [ :factor, [ :power, [ :value, [ :number, [ :integer_literal, "1" ]]]]],
            [:term_prime,
             [:add, [:operator, "+"]],
-            [:term, [:factor, [:value, [ :number, [:integer_literal, "2"]]]]]
+            [:term, [:factor, [ :power, [:value, [ :number, [:integer_literal, "2"]]]]]]
         ]]
       )
     end
@@ -76,6 +76,18 @@ describe Lang::Grammar do
       expect(Calculator.evaluate(input_string: '5+2*3')).to eq(11)
       expect(Calculator.evaluate(input_string: '(5+2)*3')).to eq(21)
       expect(Calculator.evaluate(input_string: '1+2*3-5')).to eq(2)
+      expect(Calculator.evaluate(input_string: '2**3')).to eq(8)
+      expect(Calculator.evaluate(input_string: '2**(3+1)')).to eq(16)
+      expect(Calculator.evaluate(input_string: '2**3+1')).to eq(9)
+      expect(Calculator.evaluate(input_string: '2**3+1*2')).to eq(10)
+
+      expect{
+        Calculator.evaluate(input_string: '1+2*3-')
+      }.to raise_error(LexError)
+
+      expect{
+        Calculator.evaluate(input_string: '(1+2*3')
+      }.to raise_error(LexError)
     end
   end
 end
