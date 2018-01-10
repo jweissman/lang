@@ -34,6 +34,20 @@ class Numbers < Lang::Grammar
     match.one :factor
   end
 
+  production :value do |match|
+    match.one_of :number, :subexpression
+  end
+
+  production :subexpression do |match|
+    match.token :parens, '('
+    match.one :term
+    match.token :parens, ')'
+  end
+
+  production :number do |match|
+    match.token :integer_literal
+  end
+
   production :add do |match|
     match.token :operator, '+'
   end
@@ -50,12 +64,9 @@ class Numbers < Lang::Grammar
     match.token :operator, '/'
   end
 
-  production :value do |match|
-    match.token :integer_literal
-  end
-
   token :integer_literal, matches: /[0-9]+/
   token :operator, matches: /[-+\*\/]/
+  token :parens, matches: /[\(\)]/
 end
 
 class Calculator < Lang::Composer
@@ -94,8 +105,16 @@ class Calculator < Lang::Composer
       end
     end
 
+    def subexpression(*args)
+      args[1] # ...could destructure in sign like (_lp,expr,_rp)
+    end
+
     def factor_prime(*args)
       args
+    end
+
+    def number(val)
+      val
     end
 
     def mult(_sign)
@@ -112,6 +131,10 @@ class Calculator < Lang::Composer
 
     def sub(_sign)
       [ :subtract ]
+    end
+
+    def parens(_paren)
+      nil
     end
 
     def operator(op); op  end

@@ -25,6 +25,7 @@ Language-building tools for Ruby
 
 Let's build a calculator!
 
+
 ```ruby
 require 'lang'
 
@@ -141,6 +142,13 @@ class Calculator < Lang::Composer
     end
   end
 end
+```
+
+You can use the Calculator class like:
+
+
+```ruby
+Calculator.evaluate '2+3' # => '5'
 ```
 
 ## Requirements
