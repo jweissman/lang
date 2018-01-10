@@ -25,6 +25,7 @@ Language-building tools for Ruby
 
 Let's build a calculator!
 
+```ruby
     require 'lang'
 
     class Numbers < Lang::Grammar
@@ -140,6 +141,7 @@ Let's build a calculator!
         end
       end
     end
+```
 
 ## Requirements
 
