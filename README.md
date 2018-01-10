@@ -83,7 +83,7 @@ Now we can build a simple evaluator by inheriting from `Lang::Composer` (which r
 
 Note that 'composition' methods are expected to be class methods; and that by convention `expression` is the root production.
 
-```
+```ruby
 class Calculator < Lang::Composer
   grammar Numbers
 
@@ -150,7 +150,7 @@ class Calculator < Lang::Composer
 end
 ```
 
-We can use this Calculator class to parse and reduce simple arithmetic expressions now.
+Now we can use this `Calculator` class to compute simple arithmetic expressions.
 
 ```ruby
 Calculator.evaluate '2+3'   # => 5
