@@ -68,6 +68,8 @@ describe Lang::Grammar do
 
     it 'should compose' do
       expect(Calculator.evaluate(input_string: '2+2')).to eq(4)
+      expect(Calculator.evaluate(input_string: '2+3')).to eq(5)
+      expect(Calculator.evaluate(input_string: '2+3*4')).to eq(14)
       expect(Calculator.evaluate(input_string: '2+3+4')).to eq(9)
       expect(Calculator.evaluate(input_string: '2+3-4')).to eq(1)
       expect(Calculator.evaluate(input_string: '2*3-4')).to eq(2)

@@ -8,7 +8,7 @@
 
 ## Description
 
-Language-building tools for Ruby
+Language-building tools for Ruby!
 
 ## Features
 
@@ -17,6 +17,7 @@ Language-building tools for Ruby
  - [x] `match.one_of(*types)`
  - [x] `match.zero_or_more(type)`
  - [ ] `match.one_or_more(type)`
+ - [ ]
  - Composer DSL
  - [x] Basic auto-resolution strategy
  - [ ] Resolution hooks
@@ -24,7 +25,6 @@ Language-building tools for Ruby
 ## Examples
 
 Let's build a calculator!
-
 
 ```ruby
 require 'lang'
@@ -77,7 +77,13 @@ class Numbers < Lang::Grammar
   token :integer_literal, matches: /[0-9]+/
   token :operator, matches: /[-+\*\/]/
 end
+```
 
+Now we can build a simple evaluator by inheriting from `Lang::Composer` (which requires we specify the target grammar.)
+
+Note that 'composition' methods are expected to be class methods; and that by convention `expression` is the root production.
+
+```
 class Calculator < Lang::Composer
   grammar Numbers
 
@@ -144,11 +150,11 @@ class Calculator < Lang::Composer
 end
 ```
 
-You can use the Calculator class like:
-
+We can use this Calculator class to parse and reduce simple arithmetic expressions now.
 
 ```ruby
-Calculator.evaluate '2+3' # => '5'
+Calculator.evaluate '2+3'   # => 5
+Calculator.evaluate '2+3*4' # => 14
 ```
 
 ## Requirements
