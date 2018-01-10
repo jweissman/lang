@@ -4,7 +4,7 @@
 * [Documentation](http://rubydoc.info/gems/lang/frames)
 * [Email](mailto:jweissman1986 at gmail.com)
 
-[![Code Climate GPA](https://codeclimate.com/github//lang/badges/gpa.svg)](https://codeclimate.com/github//lang)
+[![Code Climate GPA](https://codeclimate.com/github/jweissman/lang/badges/gpa.svg)](https://codeclimate.com/github/jweissman/lang)
 
 ## Description
 
