@@ -71,6 +71,7 @@ describe Lang::Grammar do
       expect(Calculator.evaluate(input_string: '2+3+4')).to eq(9)
       expect(Calculator.evaluate(input_string: '2+3-4')).to eq(1)
       expect(Calculator.evaluate(input_string: '2*3-4')).to eq(2)
+      expect(Calculator.evaluate(input_string: '5+2*3')).to eq(11)
     end
   end
 end

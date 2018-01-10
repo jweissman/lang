@@ -54,8 +54,6 @@ class Numbers < Lang::Grammar
     match.token :integer_literal
   end
 
-  #######################################
-
   token :integer_literal, matches: /[0-9]+/
   token :operator, matches: /[-+\*\/]/
 end
