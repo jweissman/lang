@@ -32,7 +32,7 @@ Let's build a calculator!
 ```ruby
 require 'lang'
 
-class Numbers < Lang::Grammar
+class SimpleNumbers < Lang::Grammar
   production :expression do |match|
     match.one :term
   end
@@ -82,73 +82,71 @@ class Numbers < Lang::Grammar
 end
 ```
 
-Now we can build a simple evaluator by inheriting from `Lang::Composer` (which requires we specify the target grammar.)
+Now we can build a simple evaluator by inheriting from `Lang::Composer`.
 
-Note that 'composition' methods are expected to be class methods; and that by convention `expression` is the root production.
+Note that 'composition' methods are expected to be instance methods; and that by convention `expression` is the root production.
 
 ```ruby
-class Calculator < Lang::Composer
-  grammar Numbers
+class SimpleCalculator < Lang::Composer
+  grammar SimpleNumbers
 
-  class << self
-    def term(left, op_and_right=nil)
-      val = left
-      if op_and_right
-        op, right = *op_and_right
-        case op.first
-        when :add then val + right
-        when :subtract then val - right
-        else raise "Unknown operator #{operator}"
-        end
-      else
-        val
+  def term(left, op_and_right=nil)
+    val = left
+    if op_and_right
+      op, right = *op_and_right
+      case op.first
+      when :add then val + right
+      when :subtract then val - right
+      else raise "Unknown operator #{operator}"
       end
+    else
+      val
     end
+  end
 
-    def term_prime(*args)
-      args
-    end
+  def term_prime(*args)
+    args
+  end
 
-    def factor(left, op_and_right=nil)
-      val = left
-      if op_and_right
-        op, right = *op_and_right
-        case op.first
-        when :div then val / right
-        when :mult then val * right
-        else raise "Unknown operator #{operator}"
-        end
-      else
-        val
+  def factor(left, op_and_right=nil)
+    val = left
+    if op_and_right
+      op, right = *op_and_right
+      case op.first
+      when :div then val / right
+      when :mult then val * right
+      else raise "Unknown operator #{operator}"
       end
+    else
+      val
     end
+  end
 
-    def factor_prime(*args)
-      args
-    end
+  def factor_prime(*args)
+    args
+  end
 
-    def mult(_sign)
-      [ :mult ]
-    end
+  def mult(_sign)
+    [ :mult ]
+  end
 
-    def div(_sign)
-      [ :div ]
-    end
+  def div(_sign)
+    [ :div ]
+  end
 
-    def add(_sign)
-      [ :add ]
-    end
+  def add(_sign)
+    [ :add ]
+  end
 
-    def sub(_sign)
-      [ :subtract ]
-    end
+  def sub(_sign)
+    [ :subtract ]
+  end
 
-    def operator(op); op  end
-    def value(val);   val end
+  def operator(op); op  end
+  def value(val);   val end
 
-    def integer_literal(val)
-      Integer(val)
-    end
+  def integer_literal(val)
+    Integer(val)
   end
 end
 ```
@@ -156,8 +154,8 @@ end
 Now we can use this `Calculator` class to compute simple arithmetic expressions.
 
 ```ruby
-Calculator.evaluate '2+3'   # => 5
-Calculator.evaluate '2+3*4' # => 14
+Calculator.evaluate input_string: '2+3'   # => 5
+Calculator.evaluate input_string: '2+3*4' # => 14
 ```
 
 ## Requirements

@@ -1,7 +1,12 @@
+class CalcError < StandardError; end
 class Reference < Struct.new(:name); end
 class Database
   def initialize
     @data = {}
+  end
+
+  def key?(key)
+    @data.key?(key)
   end
 
   def set(key, val)
@@ -17,20 +22,16 @@ class Calculator < Lang::Composer
   grammar Numbers
 
   # skip_resolution :statement
-  # after_resolution :dereference #, except: :term
+  # after_resolution :dereference, except: :statement
 
   def statement(left, op_and_right=nil)
     if op_and_right
-      # binding.pry
-      resolved_left = resolve(*left)
-      unless resolved_left.is_a?(Reference)
-        binding.pry
+      unless left.is_a?(Reference)
         raise LexError.new("Expected lhs of assignment (#{left}) to be a reference")
       end
-      op, right = *resolve(*op_and_right)
-      # binding.pry
+      op, right = *(op_and_right)
       case op.first
-      when :assign then database.set(resolved_left.name, resolve(*right))
+      when :assign then database.set(left.name, right)
       else raise "Unknown op #{op}" # ...
       end
     else
@@ -45,6 +46,7 @@ class Calculator < Lang::Composer
   def term(left, op_and_right=nil)
     if op_and_right
       op, right = *op_and_right
+      # binding.pry
       case op.first
       when :add then left + right
       when :subtract then left - right
@@ -132,9 +134,9 @@ class Calculator < Lang::Composer
     Reference[id]
   end
 
-  def identifier(id); id end
-  def operator(op); op  end
-  def value(val);   val end
+  def identifier(id); id  end
+  def operator(op);   op  end
+  def value(val);     val end
 
   def integer_literal(val)
     Integer(val)
@@ -142,9 +144,15 @@ class Calculator < Lang::Composer
 
   protected
   def dereference(maybe_ref)
-    if maybe_ref.is_a?(Reference)
-      p [ :deref!, name: maybe_ref.name ]
-      database.get(maybe_ref.name)
+    if maybe_ref.is_a?(Reference) # && database.key?(maybe_ref.name)
+      if database.key?(maybe_ref.name)
+        p [ :deref!, name: maybe_ref.name ]
+        database.get(maybe_ref.name)
+      else
+        maybe_ref
+        # binding.pry
+        # raise CalcError.new("No such variable with name '#{maybe_ref.name}'") #name
+      end
     else
       maybe_ref
     end

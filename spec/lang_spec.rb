@@ -64,18 +64,21 @@ describe Lang::Grammar do
       )
     end
 
-    let(:calculator) { Calculator.new }
+
+    let(:simple_calculator) { SimpleCalculator.new }
 
     it 'should compose respecting operator precedence' do
-      expect(calculator.evaluate(input_string: '2+2')).to eq(4)
-      expect(calculator.evaluate(input_string: '2+3')).to eq(5)
-      expect(calculator.evaluate(input_string: '2+3*4')).to eq(14)
-      expect(calculator.evaluate(input_string: '2+3+4')).to eq(9)
-      expect(calculator.evaluate(input_string: '2+3-4')).to eq(1)
-      expect(calculator.evaluate(input_string: '2*3-4')).to eq(2)
-      expect(calculator.evaluate(input_string: '5+2*3')).to eq(11)
-      expect(calculator.evaluate(input_string: '1+2*3-5')).to eq(2)
+      expect(simple_calculator.evaluate(input_string: '2+2')).to eq(4)
+      expect(simple_calculator.evaluate(input_string: '2+3')).to eq(5)
+      expect(simple_calculator.evaluate(input_string: '2+3*4')).to eq(14)
+      expect(simple_calculator.evaluate(input_string: '2+3+4')).to eq(9)
+      expect(simple_calculator.evaluate(input_string: '2+3-4')).to eq(1)
+      expect(simple_calculator.evaluate(input_string: '2*3-4')).to eq(2)
+      expect(simple_calculator.evaluate(input_string: '5+2*3')).to eq(11)
+      expect(simple_calculator.evaluate(input_string: '1+2*3-5')).to eq(2)
     end
+
+    let(:calculator) { Calculator.new }
 
     it 'composes subexpressions' do
       expect(calculator.evaluate(input_string: '(5+2)*3')).to eq(21)
@@ -88,9 +91,12 @@ describe Lang::Grammar do
       expect(calculator.evaluate(input_string: '2**3+1*2')).to eq(10)
     end
 
-    xit 'composes variables' do
+    it 'composes variables' do
       expect(calculator.evaluate(input_string: 'a=2')).to eq(2)
-      # expect(calculator.evaluate(input_string: 'a+a')).to eq(4)
+      expect(calculator.evaluate(input_string: 'a+a')).to eq(4)
+      expect(calculator.evaluate(input_string: 'b=a+5')).to eq(7)
+      expect(calculator.evaluate(input_string: 'a*b')).to eq(14)
+      expect{calculator.evaluate(input_string: 'c+3')}.to raise_error(CalcError) # undefined var 'c'
     end
 
     it 'passes through errors' do

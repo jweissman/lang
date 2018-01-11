@@ -7,6 +7,7 @@ module Lang
     end
 
     def resolve(meth, *children)
+      p [ :resolve, method: meth, children: children ]
       if self.class.resolutions_to_skip.any? && \
           self.class.resolutions_to_skip.include?(meth)
         send(meth, *children)
@@ -25,6 +26,7 @@ module Lang
           end
         end
 
+        binding.pry if meth == 'a'
         send(meth, *resolved_children)
       end
     end
