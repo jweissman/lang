@@ -10,6 +10,7 @@ module Lang
         analyst = build_matcher(tokens)
         method.call(analyst)
         unless analyst.succeeded? && analyst.total?
+          # binding.pry
           raise LexError.new("Parse failed (maybe unexpected content?)")
         end
         analyst.matches

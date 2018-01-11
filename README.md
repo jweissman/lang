@@ -17,8 +17,8 @@ Language-building tools for Ruby!
  - [x] `match.one_of(*types)`
  - [x] `match.zero_or_more(type)`
  - [ ] `match.one_or_more(type)`
- - [ ] `match.maybe?(type)` (optional)
- - [ ] `match.exact(*types)` (sequence)
+ - [ ] `match.maybe?(type)` (optional, predicate [returns `true`/`false`])
+ - [ ] `match.exactly(*types)` (sequence)
  - [ ] `match.and(type)` (check type matcher succeeds, but does not consume tokens)
  - [ ] `match.not(type)` (negation, does not consume)
  - Composer DSL
