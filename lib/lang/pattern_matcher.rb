@@ -15,12 +15,7 @@ module Lang
     def token(tkn, val=nil)
       return if failed?
       if check tkn
-        if !val.nil? && !(check(tkn) == val)
-          error "Expected #{tkn} to be #{val} but was #{check tkn}"
-          return
-        end
-
-        match consume!(tkn)
+        token!(tkn, val)
       else
         error "Expected token #{tkn} but got #{peek}"
       end
@@ -29,14 +24,19 @@ module Lang
     def one(type)
       return if failed?
       sub_analyst = run_sub_analyst(type: type)
-      if sub_analyst.failed? #!one?(type) # sub_analyst.failed?
-        error "Expected #{type} but could not find it! (next character is #{peek})"
+      if sub_analyst.failed?
+        if !total? #peek
+          error "Expected #{type} but could not find it! (next character is #{peek})"
+        else
+          error "Expected #{type} but could not find it! (end of stream)"
+        end
       else
         @consumed_tokens_count += sub_analyst.consumed_tokens_count
         @tokens.shift(sub_analyst.consumed_tokens_count)
         match [ type, *sub_analyst.matches ]
       end
     end
+
 
     def zero_or_one(type)
       return if failed?
@@ -66,6 +66,24 @@ module Lang
         zero_or_more type
       end
       true
+    end
+
+    def maybe?(type)
+      present = !!(one?(type))
+      one(type) if present
+      present
+    end
+
+    def exactly(*types)
+      return if failed?
+      types.each do |type|
+        one(type)
+      end
+
+      if failed?
+        # add more errors?
+        error "Expected to find sequence of types #{types} but failed"
+      end
     end
 
     def one_of(*types)
@@ -110,6 +128,15 @@ module Lang
     def one?(type)
       sub_analyst = run_sub_analyst(type: type)
       !sub_analyst.failed?
+    end
+
+    def token!(tkn,val)
+      if !val.nil? && !(check(tkn) == val)
+        error "Expected #{tkn} to be #{val} but was #{check tkn}"
+        return
+      end
+
+      match consume!(tkn)
     end
 
     def build_sub_analyst

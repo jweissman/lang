@@ -31,6 +31,12 @@ describe PatternMatcher do
       ]
     end
 
+    it 'can match tokens' do
+      expect{matcher.token(:apple, 'red delicious')}.to change(matcher,:matches).by([[ :apple, 'red delicious' ]])
+      expect{matcher.token(:apple, 'pink lady')}.to change(matcher,:matches).by([[ :apple, 'pink lady' ]])
+      expect{matcher.token(:apple, 'fuji')}.to change(matcher,:errors).by(["Expected token apple but got [:cherry, \"bing\"]"])
+    end
+
     it 'can match one type' do
       expect{matcher.one(:an_apple)}.to change(matcher,:matches).from([]).to([[:an_apple, [:apple, 'red delicious']]])
     end
@@ -87,6 +93,37 @@ describe PatternMatcher do
         matcher.one_or_more(:a_cherry)
       }.to change(matcher, :errors).by([
         "Expected at least one a_cherry (next is [:orange, \"flo rida\"])"
+      ])
+    end
+
+    it 'can match optionally' do
+      expect{
+        matcher.maybe?(:an_apple)
+      }.to change(matcher, :matches).by([
+        [ :an_apple, [ :apple, 'red delicious' ]]
+      ])
+
+      # basically zero_or_one, but can act as predicate (return a bool)
+      expect(matcher.maybe?(:an_orange)).to eq(false)
+      expect(matcher.maybe?(:an_apple)).to eq(true)
+    end
+
+    it 'can match a sequence' do
+      expect{
+        matcher.exactly(:an_apple, :an_apple, :a_cherry, :an_orange, :an_apple)
+      }.to change(matcher, :matches).by([
+        [ :an_apple, [ :apple, 'red delicious' ]],
+        [ :an_apple, [ :apple, 'pink lady' ]],
+        [:a_cherry, [:cherry, 'bing']],
+        [:an_orange, [:orange, 'flo rida']],
+        [ :an_apple, [ :apple, 'granny smith' ]],
+      ])
+
+      expect{
+        matcher.exactly(:a_cherry,:a_cherry,:a_cherry)
+      }.to change(matcher,:errors).by([
+        "Expected a_cherry but could not find it! (end of stream)",
+        "Expected to find sequence of types [:a_cherry, :a_cherry, :a_cherry] but failed"
       ])
     end
   end
