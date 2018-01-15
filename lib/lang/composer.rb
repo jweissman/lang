@@ -58,13 +58,11 @@ module Lang
 
       def skip_resolution(method)
         resolutions_to_skip << method
-        # todo
       end
 
       def after_resolution(method, **opts)
         except = opts.delete(:except) { [] }
         post_resolution_hooks << { method: method, except: except }
-        # todo
       end
 
       def resolutions_to_skip

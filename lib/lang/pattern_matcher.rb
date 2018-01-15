@@ -19,6 +19,7 @@ module Lang
       else
         error "Expected token #{tkn} but got #{peek}"
       end
+      self
     end
 
     def one(type)
@@ -35,6 +36,7 @@ module Lang
         @tokens.shift(sub_analyst.consumed_tokens_count)
         match [ type, *sub_analyst.matches ]
       end
+      self
     end
 
 
@@ -45,6 +47,7 @@ module Lang
       else
         one type
       end
+      self
     end
 
     def zero_or_more(type)
@@ -55,6 +58,7 @@ module Lang
         one type
         zero_or_more type
       end
+      self
     end
 
     def one_or_more(type)
@@ -65,7 +69,7 @@ module Lang
         one type
         zero_or_more type
       end
-      true
+      self
     end
 
     def maybe?(type)
@@ -84,6 +88,8 @@ module Lang
         # add more errors?
         error "Expected to find sequence of types #{types} but failed"
       end
+
+      self
     end
 
     def one_of(*types)
@@ -94,6 +100,24 @@ module Lang
       else
         error "Attempted to match one of #{types.join(', ')} but could not (next up is #{peek})"
       end
+      self
+    end
+
+    def and!(type)
+      # like maybe, but don't consume
+      present = !!(one?(type))
+      if !present
+        error "Expected #{type} but could not find it!"
+      end
+      self
+    end
+
+    def not!(type)
+      absent = !(one?(type))
+      if !absent
+        error "Expected not to find #{type} but found it!"
+      end
+      self
     end
 
     def succeeded?

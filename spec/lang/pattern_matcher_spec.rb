@@ -126,5 +126,43 @@ describe PatternMatcher do
         "Expected to find sequence of types [:a_cherry, :a_cherry, :a_cherry] but failed"
       ])
     end
+
+    it 'can match and [predicate]' do
+      # these just pass/fail without consuming
+      # i.e., they add errors if they fail but don't add to matches
+      # perform the scan but don't consume
+      expect{
+        matcher.and!(:an_apple)
+      }.not_to change(matcher, :matches)
+
+      expect{matcher.and!(:a_cherry)}.to change(matcher, :errors).by([
+        "Expected a_cherry but could not find it!"
+      ])
+
+      # can keep matching the same one over and over
+      expect{matcher.and!(:an_apple)}.not_to change(matcher,:errors)
+      expect{matcher.and!(:an_apple)}.not_to change(matcher,:errors)
+      expect{matcher.and!(:an_apple)}.not_to change(matcher,:errors)
+      expect{matcher.and!(:an_apple)}.not_to change(matcher,:errors)
+      expect{matcher.and!(:an_orange)}.to change(matcher,:errors).by([
+        "Expected an_orange but could not find it!"
+      ])
+      # expect(matcher.and(:an_apple)).to eq(true)
+      # expect(matcher.and(:an_apple)).to eq(true)
+      # expect(matcher.and(:an_apple)).to eq(true)
+    end
+
+    it 'can match not [predicate]' do
+      # expect(matcher.not(:a_cherry)).to eq(true)
+      expect{matcher.not!(:a_cherry)}.not_to change(matcher,:matches)
+
+      expect{matcher.not!(:an_apple)}.to change(matcher,:errors).by([ "Expected not to find an_apple but found it!" ])
+
+      expect{matcher.not!(:a_cherry)}.not_to change(matcher,:errors)
+      expect{matcher.not!(:a_cherry)}.not_to change(matcher,:errors)
+      expect{matcher.not!(:a_cherry)}.not_to change(matcher,:errors)
+      expect{matcher.not!(:a_cherry)}.not_to change(matcher,:errors)
+      expect{matcher.not!(:a_cherry)}.not_to change(matcher,:errors)
+    end
   end
 end

@@ -14,11 +14,11 @@ Language-building tools for Ruby!
  - [x] `match.one_or_more(type)`
  - [x] `match.maybe?(type)` (optional, predicate [returns `true`/`false`])
  - [x] `match.exactly(*types)` (sequence)
- - [ ] `match.and(type)` (check type matcher succeeds, but does not consume tokens)
- - [ ] `match.not(type)` (negation, does not consume)
+ - [ ] `match.and!(type)` (check type matcher 'would' succeed; does _not_ consume tokens)
+ - [ ] `match.not!(type)` (negation of type matcher; does _not_ consume tokens)
  - Composer DSL
  - [x] Basic auto-resolution strategy
- - [ ] Resolution hooks (`skip_resolution :method`, `after_resolve :method, :except => [ :methods ]`)
+ - [x] Resolution hooks (`skip_resolution :method`, `after_resolve :method, :except => [ :methods ]`)
 
 ## Examples
 
