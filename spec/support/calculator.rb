@@ -51,7 +51,6 @@ class Calculator < Lang::Composer
       end
 
       op, right = *op_and_right
-      # binding.pry
       case op.first
       when :add then left + right
       when :subtract then left - right
@@ -162,8 +161,6 @@ class Calculator < Lang::Composer
 
   def dereference!(ref)
     name = ref.name
-
-    p [ :deref!, name: name ]
 
     unless database.key? name
       raise CalcError.new("No such variable with name '#{name}'")

@@ -38,7 +38,6 @@ module Lang
 
     def zero_or_one(type)
       return if failed?
-      # binding.pry
       if !(one?(type))
         # it's okay..
       else

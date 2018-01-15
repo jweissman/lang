@@ -7,7 +7,6 @@ module Lang
     end
 
     def resolve(meth, *children)
-      p [ :resolve, method: meth, children: children ]
       if self.class.resolutions_to_skip.any? && \
           self.class.resolutions_to_skip.include?(meth)
         send(meth, *children)
@@ -17,7 +16,7 @@ module Lang
             resolved_child = resolve(*child)
             if self.class.post_resolution_hooks.any?
               self.class.post_resolution_hooks.each do |method:, except:|
-                resolved_child = send(method, resolved_child) #hook.call(child)
+                resolved_child = send(method, resolved_child)
               end
             end
             resolved_child
@@ -26,14 +25,11 @@ module Lang
           end
         end
 
-        # binding.pry if meth == 'a'
         send(meth, *resolved_children)
       end
     end
 
     class << self
-      # attr_reader :resolutions_to_skip, :post_resolution_hooks
-
       def grammar(g)
         @grammar = g
         true
