@@ -11,21 +11,25 @@ module Lang
           self.class.resolutions_to_skip.include?(meth)
         send(meth, *children)
       else
-        resolved_children = children.map do |child|
-          if child.is_a?(Array) # hm
-            resolved_child = resolve(*child)
-            if self.class.post_resolution_hooks.any?
-              self.class.post_resolution_hooks.each do |method:, except:|
+        send(meth, *resolve_children(meth, *children))
+      end
+    end
+
+    def resolve_children(meth, *children)
+      children.map do |child|
+        if child.is_a?(Array)
+          resolved_child = resolve(*child)
+          if self.class.post_resolution_hooks.any?
+            self.class.post_resolution_hooks.each do |method:, except:|
+              unless meth == except
                 resolved_child = send(method, resolved_child)
               end
             end
-            resolved_child
-          else
-            child
           end
+          resolved_child
+        else
+          child
         end
-
-        send(meth, *resolved_children)
       end
     end
 

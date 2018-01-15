@@ -21,7 +21,7 @@ end
 class Calculator < Lang::Composer
   grammar Numbers
 
-  after_resolution :dereference, except: :statement
+  after_resolution :dereference
 
   def statement(left, op_and_right=nil)
     if op_and_right
