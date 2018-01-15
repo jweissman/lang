@@ -40,6 +40,7 @@ describe Lang do
       expect(simple_calculator.evaluate(input_string: '2*3-4')).to eq(2)
       expect(simple_calculator.evaluate(input_string: '5+2*3')).to eq(11)
       expect(simple_calculator.evaluate(input_string: '1+2*3-5')).to eq(2)
+      expect(simple_calculator.evaluate(input_string: '2+3*(4+1)')).to eq(17)
     end
 
     let(:calculator) { Calculator.new }

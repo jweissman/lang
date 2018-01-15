@@ -1,49 +1,78 @@
 class SimpleNumbers < Lang::Grammar
   production :expression do |match|
-    match.one :term
+    match.statement
+  end
+
+  production :statement do |match|
+    match.term
+    match.one_of :statement_prime, :epsilon
+  end
+
+  production :statement_prime do |match|
+    match.one_of :plus, :minus
+    match.term
+    match.one_of :statement_prime, :epsilon
   end
 
   production :term do |match|
-    match.one :factor
-    match.zero_or_more :term_prime
+    match.factor
+    match.one_of :term_prime, :epsilon
   end
 
   production :term_prime do |match|
-    match.one_of :add, :sub
-    match.one :term
+    match.one_of :astericks, :right_slash
+    match.factor
+    match.one_of :term_prime, :epsilon
   end
 
   production :factor do |match|
-    match.one :value
-    match.zero_or_more :factor_prime
-  end
-
-  production :factor_prime do |match|
-    match.one_of :mult, :div
-    match.one :factor
-  end
-
-  production :add do |match|
-    match.token :operator, '+'
-  end
-
-  production :sub do |match|
-    match.token :operator, '-'
-  end
-
-  production :mult do |match|
-    match.token :operator, '*'
-  end
-
-  production :div do |match|
-    match.token :operator, '/'
+    match.one_of :value
   end
 
   production :value do |match|
-    match.token :integer_literal
+    match.one_of :substatement, :number
   end
 
-  token :integer_literal, matches: /[0-9]+/
-  token :operator, matches: /[-+\*\/]/
-end
+  production :substatement do |match|
+    match.left_parens
+    match.statement
+    match.right_parens
+  end
 
+  production :number do |match|
+    match.int_lit
+  end
+
+  production :plus do |match|
+    match.binary_op '+'
+  end
+
+  production :minus do |match|
+    match.binary_op '-'
+  end
+
+  production :astericks do |match|
+    match.binary_op '*'
+  end
+
+  production :right_slash do |match|
+    match.binary_op '/'
+  end
+
+  production :left_parens do |match|
+    match.parens '('
+  end
+
+  production :right_parens do |match|
+    match.parens ')'
+  end
+
+  # empty string
+  production :epsilon do |match|
+    match.assert(match.total?)
+  end
+
+  token :int_lit, matches: /[0-9]+/
+  token :binary_op, matches: /[-\*\+\/]/
+  token :parens, matches: /[\(\)]/
+end

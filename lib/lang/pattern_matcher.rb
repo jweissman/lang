@@ -125,6 +125,13 @@ module Lang
       self
     end
 
+    def assert(condition,msg=nil)
+      if !condition
+        error msg
+      end
+      self
+    end
+
     def succeeded?
       !failed?
     end

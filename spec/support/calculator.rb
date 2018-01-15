@@ -18,6 +18,7 @@ class Database
   end
 end
 
+# TODO fix grammar
 class Calculator < Lang::Composer
   grammar Numbers
 

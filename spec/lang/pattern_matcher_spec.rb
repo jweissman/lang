@@ -168,5 +168,13 @@ describe PatternMatcher do
       expect{matcher.not!(:a_cherry)}.not_to change(matcher,:errors)
       expect{matcher.not!(:a_cherry)}.not_to change(matcher,:errors)
     end
+
+    it 'can assert arbitrary boolean errors' do
+      expect{matcher.assert(true,'the truth is true')}.not_to change(matcher,:matches)
+      expect{matcher.assert(true,'the sky is blue')}.not_to change(matcher,:errors)
+
+      expect{matcher.assert(false,'the ocean is pink')}.not_to change(matcher,:matches)
+      expect{matcher.assert(false,'the sky is green')}.to change(matcher,:errors).by(['the sky is green'])
+    end
   end
 end

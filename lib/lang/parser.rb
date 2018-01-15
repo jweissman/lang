@@ -11,7 +11,7 @@ module Lang
         analyst = build_matcher(tokens)
         method.call(analyst)
         unless analyst.succeeded? && analyst.total?
-          raise ParseError.new("Parse failed (maybe unexpected content?)")
+          raise ParseError.new("Parse of tokens #{tokens} failed (maybe unexpected content?) -- matches so far: #{analyst.matches.join(';')}")
         end
         analyst.matches
       end
