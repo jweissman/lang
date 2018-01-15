@@ -17,7 +17,9 @@ Language-building tools for Ruby!
  - [x] `match.and!(type)` (check type matcher 'would' succeed; does _not_ consume tokens)
  - [x] `match.not!(type)` (negation of type matcher; does _not_ consume tokens)
  - [x] `match.total?` (epsilon or empty-string predicate; does not error)
- - [ ] `match.assert(bool,msg=nil)` (add an error to the matcher if the condition holds)
+ - [x] `match.assert(bool,msg=nil)` (add an error to the matcher if the condition holds)
+ - [x] `match.[production]` (method-missing support for production rule names)
+ - [x] `match.[tokens]` (method-missing support for token names)
  - Composer DSL
  - [x] Basic auto-resolution strategy
  - [x] Resolution hooks (`skip_resolution :method`, `after_resolve :method, :except => [ :methods ]`)
