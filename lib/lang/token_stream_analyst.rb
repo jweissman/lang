@@ -3,7 +3,7 @@ module Lang
     attr_reader :consumed_tokens_count, :tokens
     def initialize(tokens:)
       raise "TokenStreamAnalyst must have at least empty list of tokens (can't be nil)" if tokens.nil?
-      @tokens = tokens.clone
+      @tokens = tokens.dup
       @consumed_tokens_count = 0
     end
 
