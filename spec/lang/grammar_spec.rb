@@ -1,5 +1,8 @@
 require 'spec_helper'
+require 'lang/tokenizer'
 require 'lang/grammar'
+require 'lang/parser'
+require 'lang/pattern_matcher'
 require 'support/letters'
 require 'support/numbers'
 # require 'support/calculator'
