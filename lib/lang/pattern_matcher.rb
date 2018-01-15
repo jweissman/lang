@@ -142,6 +142,7 @@ module Lang
     end
 
     protected
+
     def match(m)
       @matches << m
     end
@@ -163,6 +164,8 @@ module Lang
 
       match consume!(tkn)
     end
+
+    private
 
     def build_submatcher
       self.class.new(productions: @productions, tokens: tokens)
