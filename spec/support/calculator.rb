@@ -21,8 +21,7 @@ end
 class Calculator < Lang::Composer
   grammar Numbers
 
-  # skip_resolution :statement
-  # after_resolution :dereference, except: :statement
+  after_resolution :dereference, except: :statement
 
   def statement(left, op_and_right=nil)
     if op_and_right
@@ -31,7 +30,9 @@ class Calculator < Lang::Composer
       end
       op, right = *(op_and_right)
       case op.first
-      when :assign then database.set(left.name, right)
+      when :assign then
+        # binding.pry
+        database.set(left.name, right)
       else raise "Unknown op #{op}" # ...
       end
     else
@@ -45,6 +46,10 @@ class Calculator < Lang::Composer
 
   def term(left, op_and_right=nil)
     if op_and_right
+      if left.is_a?(Reference)
+        left = dereference!(left)
+      end
+
       op, right = *op_and_right
       # binding.pry
       case op.first
@@ -63,6 +68,10 @@ class Calculator < Lang::Composer
 
   def factor(left, op_and_right=nil)
     if op_and_right
+      if left.is_a?(Reference)
+        left = dereference!(left)
+      end
+
       op, right = *op_and_right
       case op.first
       when :div then left / right
@@ -144,18 +153,23 @@ class Calculator < Lang::Composer
 
   protected
   def dereference(maybe_ref)
-    if maybe_ref.is_a?(Reference) # && database.key?(maybe_ref.name)
-      if database.key?(maybe_ref.name)
-        p [ :deref!, name: maybe_ref.name ]
-        database.get(maybe_ref.name)
-      else
-        maybe_ref
-        # binding.pry
-        # raise CalcError.new("No such variable with name '#{maybe_ref.name}'") #name
-      end
+    if maybe_ref.is_a?(Reference) && database.key?(maybe_ref.name)
+      dereference!(maybe_ref)
     else
       maybe_ref
     end
+  end
+
+  def dereference!(ref)
+    name = ref.name
+
+    p [ :deref!, name: name ]
+
+    unless database.key? name
+      raise CalcError.new("No such variable with name '#{name}'")
+    end
+
+    database.get name
   end
 
   private

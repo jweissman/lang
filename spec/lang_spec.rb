@@ -96,7 +96,11 @@ describe Lang::Grammar do
       expect(calculator.evaluate(input_string: 'a+a')).to eq(4)
       expect(calculator.evaluate(input_string: 'b=a+5')).to eq(7)
       expect(calculator.evaluate(input_string: 'a*b')).to eq(14)
-      expect{calculator.evaluate(input_string: 'c+3')}.to raise_error(CalcError) # undefined var 'c'
+      expect(calculator.evaluate(input_string: 'b')).to eq(7)
+
+      # undefined var 'c'
+      expect{calculator.evaluate(input_string: 'c+3')}.to raise_error(CalcError)
+      expect{calculator.evaluate(input_string: 'd*6')}.to raise_error(CalcError)
     end
 
     it 'passes through errors' do

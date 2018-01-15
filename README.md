@@ -155,9 +155,12 @@ Calculator.evaluate input_string: '2+3*4' # => 14
 
 ## Requirements
 
+
+
 ## Install
 
-    $ gem install lang
+    # Gemfile
+    gem 'lang', github: 'jweissman/lang'
 
 ## Synopsis
 

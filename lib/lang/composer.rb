@@ -26,7 +26,7 @@ module Lang
           end
         end
 
-        binding.pry if meth == 'a'
+        # binding.pry if meth == 'a'
         send(meth, *resolved_children)
       end
     end
