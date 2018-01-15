@@ -16,6 +16,7 @@ Language-building tools for Ruby!
  - [x] `match.exactly(*types)` (sequence)
  - [x] `match.and!(type)` (check type matcher 'would' succeed; does _not_ consume tokens)
  - [x] `match.not!(type)` (negation of type matcher; does _not_ consume tokens)
+ - [x] `match.total?` (epsilon or empty-string predicate)
  - Composer DSL
  - [x] Basic auto-resolution strategy
  - [x] Resolution hooks (`skip_resolution :method`, `after_resolve :method, :except => [ :methods ]`)
