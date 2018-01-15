@@ -136,8 +136,10 @@ module Lang
     def method_missing(sym,*args,&blk)
       if @productions.keys.include?(sym)
         one(sym)
-      else
-        super(sym,*args,&blk)
+      else # assume token?
+        token(sym,*args)
+      # else
+      #   super(sym,*args,&blk)
       end
     end
 

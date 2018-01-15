@@ -37,6 +37,10 @@ describe PatternMatcher do
       expect{matcher.token(:apple, 'fuji')}.to change(matcher,:errors).by(["Expected token apple but got [:cherry, \"bing\"]"])
     end
 
+    it 'can match tokens with method missing' do
+      expect{matcher.apple}.to change(matcher, :matches).by([[ :apple, 'red delicious' ]])
+    end
+
     it 'can match one type' do
       expect{matcher.one(:an_apple)}.to change(matcher,:matches).from([]).to([[:an_apple, [:apple, 'red delicious']]])
     end
