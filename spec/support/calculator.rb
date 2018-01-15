@@ -31,7 +31,6 @@ class Calculator < Lang::Composer
       op, right = *(op_and_right)
       case op.first
       when :assign then
-        # binding.pry
         database.set(left.name, right)
       else raise "Unknown op #{op}" # ...
       end

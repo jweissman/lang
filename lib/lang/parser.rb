@@ -1,4 +1,5 @@
 module Lang
+  class ParseError < StandardError; end
   class Parser
     def initialize(grammar:)
       @grammar = grammar
@@ -10,7 +11,7 @@ module Lang
         analyst = build_matcher(tokens)
         method.call(analyst)
         unless analyst.succeeded? && analyst.total?
-          raise LexError.new("Parse failed (maybe unexpected content?)")
+          raise ParseError.new("Parse failed (maybe unexpected content?)")
         end
         analyst.matches
       end
@@ -19,7 +20,7 @@ module Lang
     protected
 
     def build_matcher(tokens)
-      PatternMatcher.new(grammar: @grammar, tokens: tokens.dup)
+      PatternMatcher.new(productions: @grammar.productions, tokens: tokens.dup)
     end
   end
 end

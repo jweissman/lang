@@ -1,8 +1,10 @@
 module Lang
+  class MatcherError < StandardError; end
   class PatternMatcher
     attr_reader :matches, :consumed_tokens_count
-    def initialize(grammar:, tokens:)
-      @grammar = grammar
+    attr_reader :productions, :errors
+    def initialize(productions:, tokens:)
+      @productions = productions
       @tokens = tokens.dup
       @matches = []
       @errors = []
@@ -88,6 +90,14 @@ module Lang
       @errors.any?
     end
 
+    def method_missing(sym,*args,&blk)
+      if @productions.keys.include?(sym)
+        one(sym)
+      else
+        super(sym,*args,&blk)
+      end
+    end
+
     protected
     def match(m)
       @matches << m
@@ -103,11 +113,12 @@ module Lang
     end
 
     def build_sub_analyst
-      self.class.new(grammar: @grammar, tokens: @tokens.dup)
+      self.class.new(productions: @productions, tokens: @tokens.dup)
     end
 
     def run_sub_analyst(type:)
-      type_def = @grammar.productions[type]
+      raise MatcherError.new("Unknown production rule :#{type} (missing definition?)") unless @productions.key?(type)
+      type_def = @productions[type]
       sub_analyst = build_sub_analyst
       type_def.call(sub_analyst)
       sub_analyst
