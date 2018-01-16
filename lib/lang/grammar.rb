@@ -10,8 +10,8 @@ module Lang
       end
 
       def tokenize(input_string:)
-        tokenizer = Tokenizer.new(grammar: self)
-        tokenizer.extract_tokens(input_string: input_string)
+        tokenizer = Tokenizer.new(grammar: self, input_string: input_string)
+        tokenizer.extract_tokens #(input_string: input_string)
       end
 
       attr_reader :productions

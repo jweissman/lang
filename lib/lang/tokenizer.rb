@@ -1,10 +1,11 @@
 module Lang
   class Tokenizer
-    def initialize(grammar:)
+    def initialize(grammar:, input_string:)
       @grammar = grammar
+      @input_string = input_string
     end
 
-    def extract_tokens(input_string:)
+    def extract_tokens(input_string: @input_string)
       scanner = StringScanner.new(input_string)
       tokens = []
       until scanner.eos?
@@ -20,7 +21,7 @@ module Lang
       if matched_token
         tokens << [ matched_token, scanner.matched ]
       else
-        raise LexError.new("Unexpected character at #{scanner.pos}: #{input_string[scanner.pos]}")
+        raise LexError.new("Unexpected character at #{scanner.pos}: #{@input_string[scanner.pos]}")
       end
     end
 

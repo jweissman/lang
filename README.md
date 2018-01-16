@@ -116,12 +116,8 @@ First, we'll build a reducer that can distill down the huge nested ast we'll get
 class SimpleReducer < Lang::Composer
   grammar SimpleNumbers
 
-  def epsilon(*_args)
-    nil
-  end
-
-  def substatement(_lpn,val,_rpn)
-    val
+  def substatement(_lpn,stmt,_rpn)
+    stmt
   end
 
   def statement(left, right=nil)
