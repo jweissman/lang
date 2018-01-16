@@ -38,24 +38,24 @@ class SimpleNumbers < Lang::Grammar
 
   production :statement do |match|
     match.term
-    match.one_of :statement_prime, :epsilon
+    match.zero_or_one :statement_prime
   end
 
   production :statement_prime do |match|
     match.one_of :plus, :minus
     match.term
-    match.one_of :statement_prime, :epsilon
+    match.zero_or_one :statement_prime
   end
 
   production :term do |match|
     match.factor
-    match.one_of :term_prime, :epsilon
+    match.zero_or_one :term_prime
   end
 
   production :term_prime do |match|
     match.one_of :astericks, :right_slash
     match.factor
-    match.one_of :term_prime, :epsilon
+    match.zero_or_one :term_prime
   end
 
   production :factor do |match|
@@ -98,11 +98,6 @@ class SimpleNumbers < Lang::Grammar
 
   production :right_parens do |match|
     match.parens ')'
-  end
-
-  # empty string
-  production :epsilon do |match|
-    match.assert(match.total?)
   end
 
   token :int_lit, matches: /[0-9]+/
